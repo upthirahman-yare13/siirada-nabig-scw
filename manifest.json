@@ -1,13 +1,13 @@
 {
-  "name": "World Mart Live App",
-  "short_name": "WorldMart",
+  "name": "Islamic Super App",
+  "short_name": "Al-Kaamil",
   "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#008069",
-  "theme_color": "#008069",
+  "background_color": "#020617",
+  "theme_color": "#0f172a",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/124/124034.png",
+      "src": "https://cdn-icons-png.flaticon.com/512/2611/2611210.png",
       "sizes": "512x512",
       "type": "image/png"
     }
