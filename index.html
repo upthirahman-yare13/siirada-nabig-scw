@@ -3,242 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WhatsApp Ultra - Al-Kaamil</title>
+    <title>WhatsApp Live - World Mart Edition</title>
+    <script src="https://cdn.ably.com/lib/ably.min-1.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --wa-teal: #008069;
             --wa-bg: #f0f2f5;
-            --wa-light-green: #dcf8c6;
             --white: #ffffff;
             --text-dark: #111b21;
-            --text-gray: #667781;
         }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            background-color: var(--wa-bg);
-            color: var(--text-dark);
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            overflow: hidden;
-        }
+        body { font-family: 'Inter', sans-serif; margin: 0; background: var(--wa-bg); height: 100vh; display: flex; flex-direction: column; }
+        
+        header { background: var(--wa-teal); color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        
+        .tabs { background: var(--wa-teal); display: flex; text-align: center; border-bottom: 3px solid rgba(0,0,0,0.1); }
+        .tab-item { flex: 1; padding: 12px; color: rgba(255,255,255,0.7); font-weight: 600; cursor: pointer; text-transform: uppercase; font-size: 13px; }
+        .tab-item.active { color: white; border-bottom: 3px solid white; }
 
-        /* Header Area */
-        header {
-            background-color: var(--wa-teal);
-            color: var(--white);
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
+        .content { flex: 1; overflow-y: auto; background: white; }
 
-        header h1 { font-size: 20px; margin: 0; font-weight: 600; }
+        /* Chat Window Styling */
+        #chat-window { display: flex; flex-direction: column; height: 100%; position: fixed; top: 0; left: 0; width: 100%; background: #e5ddd5; z-index: 200; transform: translateX(100%); transition: 0.3s; }
+        #chat-window.open { transform: translateX(0); }
+        .chat-header { background: var(--wa-teal); color: white; padding: 15px; display: flex; align-items: center; }
+        .messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; }
+        .msg { max-width: 70%; padding: 8px 12px; border-radius: 8px; margin-bottom: 8px; font-size: 14px; position: relative; }
+        .msg.sent { align-self: flex-end; background: #dcf8c6; }
+        .msg.received { align-self: flex-start; background: white; }
+        
+        .input-area { padding: 10px; background: #f0f0f0; display: flex; align-items: center; }
+        .input-area input { flex: 1; padding: 10px; border-radius: 20px; border: none; outline: none; margin-right: 10px; }
+        .send-btn { background: var(--wa-teal); color: white; border: none; padding: 10px 15px; border-radius: 50%; cursor: pointer; }
 
-        .header-icons span {
-            margin-left: 20px;
-            font-size: 18px;
-            cursor: pointer;
-        }
-
-        /* Tabs Menu */
-        .tabs {
-            background-color: var(--wa-teal);
-            display: flex;
-            text-align: center;
-            border-bottom: 3px solid rgba(0,0,0,0.1);
-        }
-
-        .tab-item {
-            flex: 1;
-            padding: 12px 0;
-            color: rgba(255,255,255,0.7);
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            text-transform: uppercase;
-            transition: 0.3s;
-        }
-
-        .tab-item.active {
-            color: var(--white);
-            border-bottom: 3px solid var(--white);
-        }
-
-        /* Content Area */
-        .content {
-            flex: 1;
-            overflow-y: auto;
-            background: var(--white);
-        }
-
-        /* Chat List Style */
-        .chat-row {
-            display: flex;
-            padding: 15px;
-            border-bottom: 1px solid #f2f2f2;
-            align-items: center;
-            cursor: pointer;
-        }
-
-        .chat-row:hover { background-color: #f9f9f9; }
-
-        .avatar {
-            width: 50px;
-            height: 50px;
-            background: #ccc;
-            border-radius: 50%;
-            margin-right: 15px;
-            overflow: hidden;
-        }
-
-        .chat-info { flex: 1; }
-        .chat-info h3 { margin: 0; font-size: 16px; display: flex; justify-content: space-between; }
-        .chat-info p { margin: 5px 0 0; font-size: 14px; color: var(--text-gray); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .time { font-size: 11px; color: var(--text-gray); font-weight: 400; }
-
-        /* Floating Action Button */
-        .fab {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            background-color: #25d366;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-size: 24px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            cursor: pointer;
-        }
-
-        /* Status & Calls Hidden */
+        .chat-row { display: flex; padding: 15px; border-bottom: 1px solid #f2f2f2; align-items: center; cursor: pointer; }
+        .avatar { width: 50px; height: 50px; background: #ddd; border-radius: 50%; margin-right: 15px; }
         .hidden { display: none; }
-
-        /* Status Styling */
-        .status-header { padding: 15px; background: #f8f9fa; font-weight: 600; color: var(--wa-teal); }
-
-        /* Call Styling */
-        .call-icon { color: var(--wa-teal); margin-left: auto; }
-
+        
+        /* Live Tag */
+        .live-badge { background: red; color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; margin-left: 5px; }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>WhatsApp Clone</h1>
-    <div class="header-icons">
-        <span>🔍</span>
-        <span>⋮</span>
-    </div>
+    <h1>WhatsApp Live</h1>
+    <div style="font-size: 20px;">🔍 &nbsp; ⋮</div>
 </header>
 
 <div class="tabs">
     <div class="tab-item active" onclick="showTab('chats', this)">Chats</div>
+    <div class="tab-item" onclick="showTab('live', this)">Live <span class="live-badge">REC</span></div>
     <div class="tab-item" onclick="showTab('status', this)">Status</div>
     <div class="tab-item" onclick="showTab('calls', this)">Calls</div>
 </div>
 
 <div class="content" id="main-content">
-    
-    <div id="section-chats">
-        <div class="chat-row">
-            <div class="avatar"><img src="https://i.pravatar.cc/50?u=1" alt=""></div>
-            <div class="chat-info">
-                <h3>Hooyo 💖 <span class="time">10:45 AM</span></h3>
-                <p>Ma qadiyay hooyo? Ii soo sheeg...</p>
-            </div>
-        </div>
-        <div class="chat-row">
-            <div class="avatar"><img src="https://i.pravatar.cc/50?u=2" alt=""></div>
-            <div class="chat-info">
-                <h3>World Mart Support <span class="time">Yesterday</span></h3>
-                <p>Dalabkaaga waa diyaar, soo dooro.</p>
-            </div>
-        </div>
-        <div class="chat-row">
-            <div class="avatar"><img src="https://i.pravatar.cc/50?u=3" alt=""></div>
-            <div class="chat-info">
-                <h3>Yacquub (Dev) <span class="time">Monday</span></h3>
-                <p>App-ka cusub waa mid aad u update san!</p>
+    <div id="sec-chats">
+        <div class="chat-row" onclick="openChat('World Mart Group')">
+            <div class="avatar"><img src="https://i.pravatar.cc/50?u=group" style="width:100%; border-radius:50%"></div>
+            <div style="flex:1">
+                <h3 style="margin:0; font-size:16px;">World Mart Public Group</h3>
+                <p style="margin:5px 0 0; font-size:13px; color:gray;">Ku soo dhawaada sheekada tooska ah...</p>
             </div>
         </div>
     </div>
 
-    <div id="section-status" class="hidden">
-        <div class="chat-row">
-            <div class="avatar" style="border: 2px solid var(--wa-teal);"><img src="https://i.pravatar.cc/50?u=me" alt=""></div>
-            <div class="chat-info">
-                <h3>My Status</h3>
-                <p>Tap to add status update</p>
+    <div id="sec-live" class="hidden">
+        <div style="padding:20px; text-align:center;">
+            <div style="width:100%; height:200px; background:black; border-radius:15px; display:flex; align-items:center; justify-content:center; color:white; font-weight:bold;">
+                LIVE STREAMING VIDEO
             </div>
-        </div>
-        <div class="status-header">Recent updates</div>
-        <div class="chat-row">
-            <div class="avatar" style="border: 2px solid var(--wa-teal);"><img src="https://i.pravatar.cc/50?u=9" alt=""></div>
-            <div class="chat-info">
-                <h3>Saaxiibkay</h3>
-                <p>15 minutes ago</p>
-            </div>
+            <h2 style="color:var(--wa-teal)">Halkan ka bilow Live-kaaga</h2>
+            <button style="background:red; color:white; padding:15px 30px; border:none; border-radius:25px; font-weight:bold;">GO LIVE NOW</button>
         </div>
     </div>
 
-    <div id="section-calls" class="hidden">
+    <div id="sec-status" class="hidden">
         <div class="chat-row">
-            <div class="avatar"><img src="https://i.pravatar.cc/50?u=1" alt=""></div>
-            <div class="chat-info">
-                <h3>Hooyo 💖</h3>
-                <p>↙ Today, 9:20 AM</p>
-            </div>
-            <span class="call-icon">📞</span>
-        </div>
-        <div class="chat-row">
-            <div class="avatar"><img src="https://i.pravatar.cc/50?u=4" alt=""></div>
-            <div class="chat-info">
-                <h3>Adeer Cabdi</h3>
-                <p>↗ Yesterday, 11:00 PM</p>
-            </div>
-            <span class="call-icon">📹</span>
+            <div class="avatar" style="border:2px solid green"></div>
+            <h3>My Status</h3>
         </div>
     </div>
 
+    <div id="sec-calls" class="hidden">
+        <div style="padding:20px; text-align:center; color:gray;">Ma jiraan wicitaano dhowaan dhacay.</div>
+    </div>
 </div>
 
-<div class="fab" id="main-fab" onclick="addNewChat()">💬</div>
+<div id="chat-window">
+    <div class="chat-header">
+        <button onclick="closeChat()" style="background:none; border:none; color:white; font-size:20px; cursor:pointer;">←</button>
+        <h3 id="chat-title" style="margin-left:15px;">Group Chat</h3>
+    </div>
+    <div class="messages" id="message-container">
+        <div class="msg received">Soo dhawow! Magacaaga qor si aad u sheekaysato.</div>
+    </div>
+    <div class="input-area">
+        <input type="text" id="msg-input" placeholder="Qor fariin...">
+        <button class="send-btn" onclick="sendLiveMessage()">➤</button>
+    </div>
+</div>
 
 <script>
-    function showTab(tabName, element) {
-        // Hide all sections
-        document.getElementById('section-chats').classList.add('hidden');
-        document.getElementById('section-status').classList.add('hidden');
-        document.getElementById('section-calls').classList.add('hidden');
+    // Live Chat Connection (Using Ably Free Key)
+    const ably = new Ably.Realtime('YOUR_ABLY_KEY_HERE'); // Halkan waxaad dhex galin kartaa API Key-gaaga bilaashka ah
+    const channel = ably.channels.get('world-mart-chat');
 
-        // Show selected section
-        document.getElementById('section-' + tabName).classList.remove('hidden');
-
-        // Update active tab style
-        document.querySelectorAll('.tab-item').forEach(tab => tab.classList.remove('active'));
-        element.classList.add('active');
-
-        // Change FAB icon
-        const fab = document.getElementById('main-fab');
-        if(tabName === 'chats') fab.innerHTML = '💬';
-        else if(tabName === 'status') fab.innerHTML = '📷';
-        else if(tabName === 'calls') fab.innerHTML = '📞';
+    function openChat(name) {
+        document.getElementById('chat-title').innerText = name;
+        document.getElementById('chat-window').classList.add('open');
+        
+        // Subscribe to live messages
+        channel.subscribe('message', function(msg) {
+            renderMessage(msg.data.text, msg.data.user === myName ? 'sent' : 'received');
+        });
     }
 
-    function addNewChat() {
-        const num = prompt("Gali nambarka aad rabto inaad la hadasho:");
-        if(num) {
-            alert("Nambarka " + num + " waa lagu daray liiskaaga sheekada!");
-        }
+    let myName = prompt("Magacaaga qor:") || "Guest";
+
+    function sendLiveMessage() {
+        const input = document.getElementById('msg-input');
+        if(input.value.trim() === "") return;
+
+        channel.publish('message', { text: input.value, user: myName });
+        input.value = "";
+    }
+
+    function renderMessage(text, type) {
+        const container = document.getElementById('message-container');
+        const div = document.createElement('div');
+        div.className = 'msg ' + type;
+        div.innerText = text;
+        container.appendChild(div);
+        container.scrollTop = container.scrollHeight;
+    }
+
+    function closeChat() { document.getElementById('chat-window').classList.remove('open'); }
+
+    function showTab(tab, el) {
+        ['sec-chats', 'sec-live', 'sec-status', 'sec-calls'].forEach(s => document.getElementById(s).classList.add('hidden'));
+        document.getElementById('sec-' + tab).classList.remove('hidden');
+        document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
     }
 </script>
 
