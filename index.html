@@ -98,7 +98,7 @@
 <script>
     // 1. Live Connection (Bilaash)
     // Iska diiwaangeli Ably.com si aad u hesho API KEY-gaaga
-   cpCWtQ.VXcqiw:4iK4Xyq3hdlSpaFoO8ZZG-Q8d0PGCwyZMw2jaTNO5vA 
+   const ably = new Ably.Realtime('cpCWtQ.VXcqiw:4iK4Xyq3hdlSpaFoO8ZZG-Q8dOPGCwyZMw2jaTNO5vA');
     const channel = ably.channels.get('public-chat');
     let userName = prompt("Fadlan qor magacaaga:") || "Guest";
 
