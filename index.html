@@ -3,24 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>World Mart - Islamic Super App</title>
+    <title>Siirada iyo Qur'aanka</title>
 
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/124/124034.png">
-    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/124/124034.png">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2987/2987996.png">
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2987/2987996.png">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#008069">
-
-    <script src="https://cdn.ably.com/lib/ably.min-1.js"></script>
+    <meta name="apple-mobile-web-app-title" content="Siirada">
+    <meta name="theme-color" content="#0f172a">
 
     <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0b141a; /* WhatsApp Dark Mode Bg */
+            --bg: #020617;
             --card: #1e293b;
             --gold: #fbbf24;
-            --whatsapp: #008069;
             --text: #f8fafc;
             --sub: #94a3b8;
             --nav-bg: #0f172a;
@@ -36,54 +32,72 @@
         }
 
         header {
-            background: var(--whatsapp);
-            padding: 20px 15px;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            padding: 20px;
             text-align: center;
+            border-bottom: 4px solid var(--gold);
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
 
-        .container { padding: 15px; max-width: 850px; margin: auto; }
+        .container { padding: 15px; max-width: 800px; margin: auto; }
 
         .content-box {
-            background: #111b21;
+            background: var(--card);
             border-radius: 15px;
             padding: 20px;
             margin-bottom: 25px;
-            border-left: 4px solid var(--whatsapp);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            border-left: 5px solid var(--gold);
         }
 
-        /* Chat Styles */
-        #chat-window { height: 70vh; display: flex; flex-direction: column; background: #0b141a; border-radius: 15px; overflow: hidden; border: 1px solid #334155; }
-        #msg-box { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-        .msg { padding: 10px 15px; border-radius: 10px; max-width: 80%; font-size: 14px; word-wrap: break-word; }
-        .sent { background: #005c4b; align-self: flex-end; color: white; }
-        .received { background: #202c33; align-self: flex-start; }
-        .input-area { display: flex; padding: 10px; background: #202c33; gap: 10px; }
-        input { flex: 1; padding: 12px; border-radius: 25px; border: none; background: #2a3942; color: white; outline: none; }
-        .send-btn { background: var(--whatsapp); border: none; color: white; padding: 10px 20px; border-radius: 50%; cursor: pointer; font-weight: bold; }
+        .arabic {
+            font-family: 'Amiri', serif;
+            font-size: 1.4rem;
+            color: var(--gold);
+            text-align: right;
+            direction: rtl;
+            margin-bottom: 10px;
+        }
 
-        /* General Styles */
-        .img-hero { width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 15px; }
-        .arabic-head { font-family: 'Amiri', serif; font-size: 1.5rem; color: var(--gold); text-align: right; }
-        .quran-container { height: 80vh; border-radius: 15px; overflow: hidden; background: white; }
+        .somali { font-size: 1.05rem; color: var(--text); }
+
+        .quran-container { height: 75vh; border-radius: 10px; overflow: hidden; background: white; }
         iframe { width: 100%; height: 100%; border: none; }
 
-        .tasbih-wrapper { text-align: center; padding: 20px; }
-        .counter-num { font-size: 80px; color: var(--whatsapp); margin: 10px 0; }
-        .tap-area { width: 180px; height: 180px; border-radius: 50%; border: 8px solid var(--whatsapp); background: transparent; color: white; font-size: 20px; font-weight: bold; cursor: pointer; }
+        .tasbih-box { text-align: center; padding: 40px 0; }
+        #t-num { font-size: 100px; color: var(--gold); margin: 20px 0; font-weight: 800; }
+        .btn-tap {
+            width: 200px; height: 200px; border-radius: 50%;
+            border: 8px solid var(--gold); background: none;
+            color: white; font-size: 24px; font-weight: bold; cursor: pointer;
+        }
+
+        /* Support Section */
+        .support-box {
+            background: #064e3b;
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 30px;
+            border: 2px dashed var(--gold);
+        }
 
         nav {
             position: fixed; bottom: 0; width: 100%;
-            background: #202c33; display: flex;
-            overflow-x: auto; padding: 15px 0;
-            border-top: 1px solid #334155;
-            justify-content: space-around;
+            background: var(--nav-bg); display: flex;
+            overflow-x: auto; padding: 10px 0;
+            border-top: 2px solid #334155;
+            scrollbar-width: none;
         }
-        nav button { background: none; border: none; color: var(--sub); font-size: 11px; cursor: pointer; font-weight: 600; }
-        nav button.active { color: var(--whatsapp); border-bottom: 2px solid var(--whatsapp); }
+        nav button {
+            flex: 0 0 auto; min-width: 80px;
+            background: none; border: none; color: var(--sub);
+            font-weight: bold; font-size: 10px; cursor: pointer;
+        }
+        nav button.active { color: var(--gold); border-bottom: 2px solid var(--gold); }
 
         .hidden { display: none; }
     </style>
@@ -91,95 +105,106 @@
 <body>
 
 <header>
-    <h1 id="page-title" style="margin:0; font-family:'Amiri'; font-size: 1.5rem;">World Mart Chat</h1>
+    <h1 id="page-title" style="margin:0; font-family:'Amiri';">Qur'aanka</h1>
 </header>
 
 <div class="container">
 
-    <div id="sec-chat">
-        <div id="chat-window">
-            <div id="msg-box"></div>
-            <div class="input-area">
-                <input type="text" id="user-input" placeholder="Qor fariin...">
-                <button class="send-btn" onclick="sendMsg()">></button>
-            </div>
-        </div>
-    </div>
-
-    <div id="sec-quran" class="hidden">
+    <div id="sec-quran">
         <div class="quran-container">
-            <iframe src="https://quran.com/so"></iframe>
+            <iframe src="https://quran.com/so?embedded=true"></iframe>
         </div>
     </div>
 
     <div id="sec-sira" class="hidden">
         <div class="content-box">
-            <img src="https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?auto=format&fit=crop&q=80&w=1000" class="img-hero">
-            <div class="arabic-head">١. المولد والنسب والنشأة</div>
-            <p>Waa Maxamed binu Cabdullaahi ﷺ. Wuxuu dhashay Sannadkii Maroodiga (571 M).</p>
+            <h3>Dhalashadii Nabiga ﷺ</h3>
+            <p>Nabigu ﷺ wuxuu dhashay sannadkii Maroodiga, 12-ka Rabiicul-Awal. Wuxuu ku dhashay magaalada Makka Al-Mukarrama.</p>
         </div>
+        <div class="content-box">
+            <h3>Hijradii Madiina</h3>
+            <p>Nabigu ﷺ wuxuu u hijrooday Madiina isagoo ka baxsanaya dhibaatadii Qureysh, halkaas ayuuna ka dhisay dawladdii Islaamka.</p>
         </div>
+    </div>
+
+    <div id="sec-xadiis" class="hidden">
+        <div class="content-box">
+            <div class="arabic">انما الأعمال بالنيات</div>
+            <div class="somali">"Camalladu waxay ku xiran yihiin niyadda." (Bukhaari)</div>
+        </div>
+        <div class="content-box">
+            <div class="arabic">خيركم من تعلم القرآن وعلمه</div>
+            <div class="somali">"Ka idiinku khayrka badan waa kan barta Qur'aanka dadkana bara."</div>
+        </div>
+        <div class="content-box">
+            <div class="arabic">المسلم من سلم المسلمون من لسانه ويده</div>
+            <div class="somali">"Muslimku waa kan ay muslimiintu ka nabad galaan carrabkiisa iyo gacantiisa."</div>
+        </div>
+    </div>
+
+    <div id="sec-duco" class="hidden">
+        <div class="content-box">
+            <div class="arabic">رب اغفر لي ولوالدي</div>
+            <div class="somali">"Eebow ii dambi dhaaf aniga iyo waalidkay."</div>
+        </div>
+        <div class="content-box">
+            <div class="arabic">اللهم انك عفو تحب العفو فاعف عني</div>
+            <div class="somali">"Alloow adigu waxaad tahay cafis badane, cafiska waad jeceshahay ee i cafi."</div>
+        </div>
+        <div class="content-box">
+            <div class="arabic">ربنا آتنا في الدنيا حسنة وفي الآخرة حسنة</div>
+            <div class="somali">"Rabbiyow na sii adduunka wanaag iyo aakhirada wanaag."</div>
+        </div>
+    </div>
 
     <div id="sec-tasbih" class="hidden">
-        <div class="tasbih-wrapper">
-            <h2 id="t-num" class="counter-num">0</h2>
-            <button class="tap-area" onclick="count()">TAABO</button>
+        <div class="tasbih-box">
+            <div id="t-num">0</div>
+            <button class="btn-tap" onclick="count()">TAABO</button>
             <br><br>
-            <button onclick="resetT()" style="background:none; border:1px solid gray; color:gray; padding:5px 15px; border-radius:10px;">Reset</button>
+            <button onclick="resetT()" style="color:var(--sub); background:none; border:none;">Reset</button>
         </div>
+    </div>
+
+    <div class="support-box">
+        <h4>Taageer App-ka</h4>
+        <p>Haddii aad ka faa'iideysatay, nagu taageer horumarinta dacwada.</p>
+        <p><strong>EVC / ZAAD: 061XXXXXXX</strong></p>
     </div>
 
 </div>
 
 <nav>
-    <button onclick="tab('sec-chat', 'Live Chat', this)" class="active">CHAT</button>
-    <button onclick="tab('sec-quran', 'Quraanka', this)">QUR'AAN</button>
+    <button onclick="tab('sec-quran', 'Qur\'aanka', this)" class="active">QURAAN</button>
     <button onclick="tab('sec-sira', 'Siirada', this)">SIIRADA</button>
+    <button onclick="tab('sec-xadiis', 'Xadiith', this)">XADIITH</button>
+    <button onclick="tab('sec-duco', 'Ducooyin', this)">DUCOOYIN</button>
     <button onclick="tab('sec-tasbih', 'Tasbiix', this)">TASBIIX</button>
 </nav>
 
 <script>
-    // 1. Live Chat Settings
-    const ably = new Ably.Realtime('cpCWtQ.VXcqiw:4iK4Xyq3hdlSpaFoO8ZZG-Q8dOPGCwyZMw2jaTNO5vA');
-    const channel = ably.channels.get('public-chat');
-    let userName = prompt("Fadlan qor magacaaga:") || "Guest";
-
-    channel.subscribe('msg', function(m) {
-        addMessage(m.data.text, m.data.user === userName ? 'sent' : 'received', m.data.user);
-    });
-
-    function sendMsg() {
-        const input = document.getElementById('user-input');
-        if(input.value) {
-            channel.publish('msg', { text: input.value, user: userName });
-            input.value = '';
-        }
-    }
-
-    function addMessage(text, type, user) {
-        const box = document.getElementById('msg-box');
-        const div = document.createElement('div');
-        div.className = 'msg ' + type;
-        div.innerHTML = `<small style="display:block; font-weight:bold; font-size:10px;">${user}</small>${text}`;
-        box.appendChild(div);
-        box.scrollTop = box.scrollHeight;
-    }
-
-    // 2. Navigation
     function tab(id, title, btn) {
-        ['sec-chat', 'sec-quran', 'sec-sira', 'sec-tasbih'].forEach(s => {
+        ['sec-quran', 'sec-sira', 'sec-xadiis', 'sec-duco', 'sec-tasbih'].forEach(s => {
             document.getElementById(s).classList.add('hidden');
         });
         document.getElementById(id).classList.remove('hidden');
         document.getElementById('page-title').innerText = title;
         document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
+        window.scrollTo(0,0);
     }
 
-    // 3. Tasbih
     let c = 0;
-    function count() { c++; document.getElementById('t-num').innerText = c; if(navigator.vibrate) navigator.vibrate(40); }
-    function resetT() { c = 0; document.getElementById('t-num').innerText = c; }
+    function count() {
+        c++;
+        document.getElementById('t-num').innerText = c;
+        if(navigator.vibrate) navigator.vibrate(50);
+    }
+    
+    function resetT() {
+        c = 0;
+        document.getElementById('t-num').innerText = c;
+    }
 </script>
 
 </body>
